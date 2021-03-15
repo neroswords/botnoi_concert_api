@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card-wrapper">
+
+    <div class="card">
+
+      <h1 class="center">Log In</h1>
+
+      <form name="login_form">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" class="field" required>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" class="field" required>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="alert flashes">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <p class="error error--hidden"></p>
+
+        <input type="submit" value="Log In" class="btn">
+      
+      </form>
+      <p style="text-align:center">If you do not have account <a href="/signup">sign up</a> here</p>
+    </div>
+  
+  </div>
+{% endblock %}

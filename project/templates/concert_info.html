@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="status">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img class="img-fluid" id="paymentImage" src="">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="confirmPayment" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="purchasedModal" tabindex="-1" aria-labelledby="purchasedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="status">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img class="img-fluid" id="paymentImage" src="">
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="container" style="margin-top:80px;">
+        <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+            <div class="party-picture col-md-6">
+                <article class="entry">
+                <figure class="entry__thumb entry__thumb--zoom">
+                    <img src="/images/concert/{{concert['image']}}" class="card-img-top">
+                </figure>
+                </article>
+            </div>
+
+            <div class="party-detail col-md-6">
+                <article class="entry">
+                <div class="entry__body">
+                    <div class="entry__meta">
+                    <span class="entry__meta__posted">
+                        Title: 
+                        <span class="party-detail-info">{{concert['title']}}</span>
+                    </span>
+                    </div>
+                    <!-- <div class="entry__meta">
+                    <span class="entry__meta__posted">
+                        ชื่อในเกม: 
+                        <span class="party-detail-info">ใส่ชื่อในเกมของหัวหน้าปาร์ตี้</span>
+                    </span>
+                    </div> -->
+                    <div class="entry__meta">
+                    <span class="entry__meta__posted">
+                        Link: 
+                        <span class="party-detail-info">{{concert['link']}}</span>
+                    </span>
+                    </div>
+                    <div class="entry__meta">
+                        <span class="entry__meta__posted">
+                            Price: 
+                            <span class="party-detail-info">{{concert['price']}} ฿</span>
+                        </span>
+                    </div>
+                    <div class="entry__meta">
+                        <span class="entry__meta__posted">
+                            Payment account: 
+                            <span class="party-detail-info">{{concert['payment']}}</span>
+                        </span>
+                    </div>
+                    <div class="entry__meta">
+                    <span class="entry__meta__posted">
+                        Date: 
+                        <span class="party-detail-info"> {{ concert['date'] }}</span>
+                    </span>
+                    </div>
+                    <div class="entry__meta">
+                    <span class="entry__meta__posted">
+                        Info: 
+                        <span class="party-detail-info">{{ concert['info'] }}</span>
+                    </span>
+                    </div>
+                    <div class="entry__meta">
+                        <span class="entry__meta__posted">
+                            Status: 
+                            <span class="party-detail-info">{{ concert['status'] }}</span>
+                        </span>
+                    </div>
+                </div>
+                </article>
+                {% if concert['status'] == "open" %}
+                <form action="/concert/{{concert['_id']}}/to_close" method="post">
+                    <button type="submit" class="btn btn-danger rounded-pill">to close</button>
+                </form>
+                {% else %}
+                <form action="/concert/{{concert['_id']}}/to_open" method="post">
+                    <button type="submit" class="btn btn-info rounded-pill">to open</button>
+                </form>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="profile-tab" href="#waited" data-toggle="tab" role="tab" aria-controls="waited" aria-selected="true">Waited</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" href="#purchased" data-toggle="tab" role="tab" aria-controls="purchased" aria-selected="false">Purchased</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="waited" role="tabpanel" aria-labelledby="table-tab">
+            <div class="container" style="margin-top:1%">
+                <table id="waitedList" class="display">
+                    <thead>
+                        <tr>
+                            <th style="display:none;">userID</th>
+                            <th>Facebook name</th>
+                            <th>Date</th>
+                            <th>Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trans in waited_transactions %}
+                        <tr>
+                            <td style="display:none;">{{trans['userID']}}</td>
+                            <td>{{trans['username']}}</td>
+                            <td>{{trans['date']}}</td>
+                            <td><a type="button" class="" href="#" data-toggle="modal" data-target="#paymentModal" data-username="{{trans['username']}}" data-transid="{{trans['_id']}}" data-payment="{{trans['bill']}}">bill</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade active" id="purchased" role="tabpanel" aria-labelledby="table-tab">
+            <div class="container" style="margin-top:1%">
+                <table id="purchasedList" class="display">
+                    <thead>
+                        <tr>
+                            <th style="display:none;">userID</th>
+                            <th>Facebook name</th>
+                            <th>Date</th>
+                            <th>Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trans in purchased_transactions %}
+                        <tr>
+                            <td style="display:none;">{{trans['userID']}}</td>
+                            <td>{{trans['username']}}</td>
+                            <td>{{trans['date']}}</td>
+                            <td><a type="button" class="" href="#" data-toggle="modal" data-target="#purchasedModal" data-username="{{trans['username']}}" data-transid="{{trans['_id']}}" data-payment="{{trans['bill']}}">bill</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
